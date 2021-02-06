@@ -6,7 +6,7 @@ def sum_of_k(numbers: Set[int], d: int, k: int) -> Optional[Tuple[int]]:
     tuple exists, `None` is returned.
 
     Note: Given that item search in `numbers` is performed in complexity `O(1)` the overall
-    complexity of this function is `O(n^k)` where `n = |numbers|`.
+    complexity of this function is `O(n^(k-1))` where `n = |numbers|`.
 
     @param numbers - A set of integers from which to chose the tuple.
     @param d - The desired target number that the tuple sum should match. Must be an integer.
