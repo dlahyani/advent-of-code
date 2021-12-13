@@ -164,7 +164,8 @@ def main():
     rules = build_rules(parsed_rules)
 
     # Part 1:
-    lines_matching_rule_0 = filter(lambda s: rules[0].match(s, 0, True) != 0, strings)
+    lines_matching_rule_0 = list(filter(lambda s: rules[0].match(s, 0, True) != 0, strings))
+    print("\n".join(lines_matching_rule_0))
     print(f"Number of lines matching rule #0: {len(list(lines_matching_rule_0))}")
 
 
