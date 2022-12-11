@@ -11,6 +11,7 @@ regex = "^2020.11.13"
 mypy = "^0.910"
 black = "^21.12b0"
 pylint = "^2.12.2"
+parse = "^1.19.0"
 
 [tool.poetry.dev-dependencies]
 
