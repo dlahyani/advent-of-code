@@ -2,9 +2,6 @@ from dataclasses import dataclass
 from typing import Optional
 import regex
 
-
-raw_input = open("2022/16/input.txt").readlines()
-
 @dataclass
 class Valve:
     id: str
@@ -52,20 +49,15 @@ def parse_input(raw_input):
         for m in map(lambda l: pattern.match(l.strip()), raw_input)
     ]    
 
-
-valves = parse_input(raw_input)
-tunnel_system = TunnelSystem(valves)
-
 def maximize_flow(ts: TunnelSystem, cur_v: str, max_time: int) -> int:
     cache = {}
     
     def _maximize_flow(v: str, ttl: int) -> tuple[int, tuple[str]]:
         if ttl == 0 or len(ts.open_valves) == (len(ts) - len(ts.broken_valves)):
-            return ts.flow_rate * ttl, tuple() if ttl == 0 else (f"Stay at valve {v} for {ttl} minutes",)
+            return ts.flow_rate * ttl, tuple()
         
         k = (v, ttl, tuple(ts.open_valves))
-        if k in cache:
-            return cache[k]
+        if k in cache: return cache[k]
 
         max_flow = 0
         max_flow_steps = None
@@ -73,25 +65,33 @@ def maximize_flow(ts: TunnelSystem, cur_v: str, max_time: int) -> int:
             ts.open_valve(v)
             max_flow, max_flow_steps = _maximize_flow(v, ttl-1)
             max_flow += ts.flow_rate
-            max_flow_steps = (f"Open valve '{v}'",) + max_flow_steps
+            max_flow_steps = (v,) + max_flow_steps
             ts.close_valve(v)
         
-        if ttl > 1:
-            for next_v in ts.valve(v).tunnels_dst:
-                next_v_max_flow, next_v_max_flow_steps = _maximize_flow(next_v, ttl-1)
-                next_v_max_flow += ts.flow_rate
-                if next_v_max_flow > max_flow:
-                    max_flow = next_v_max_flow
-                    max_flow_steps = (f"Move to valve '{next_v}'",) + next_v_max_flow_steps
-        
-        if max_flow_steps is None:
-            max_flow += ts.flow_rate * ttl
-            max_flow_steps = (f"Stay at valve '{v}' for {ttl} minutes",)
+        for next_v in ts.valve(v).tunnels_dst:
+            next_v_max_flow, next_v_max_flow_steps = _maximize_flow(next_v, ttl-1)
+            next_v_max_flow += ts.flow_rate
+            if next_v_max_flow > max_flow:
+                max_flow, max_flow_steps  = next_v_max_flow, next_v_max_flow_steps
         
         cache[k] = (max_flow, max_flow_steps)
         return max_flow, max_flow_steps
     
     return _maximize_flow(cur_v, max_time-1)
 
-max_flow, max_flow_steps = maximize_flow(tunnel_system, 'AA', 30)
+
+raw_input = open("2022/16/input.txt").readlines()
+valves = parse_input(raw_input)
+tunnel_system = TunnelSystem(valves)
+
+### Part 1
+max_flow, max_flow_steps = maximize_flow(tunnel_system, "AA", 30)
 print(f"Max flow: {max_flow}")
+
+# Part 2
+max_flow_human, human_steps = maximize_flow(tunnel_system, "AA", 26)
+for v in human_steps:
+    tunnel_system.valve(v).flow_rate = 0
+    tunnel_system.open_valve(v)
+max_flow_elephant, elephant_steps = maximize_flow(tunnel_system, "AA", 26)
+print(f"Max flow achieved: {max_flow_human + max_flow_elephant}")
