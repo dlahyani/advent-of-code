@@ -6,14 +6,15 @@ authors = ["Daniel Lahyani <daniel.lahyani@gmail.com>"]
 license = "Apache License Version 2.0"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
 regex = "^2020.11.13"
-mypy = "^0.910"
-black = "^21.12b0"
-pylint = "^2.12.2"
 parse = "^1.19.0"
 
-[tool.poetry.dev-dependencies]
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.11.0"
+mypy = "^1.7.1"
+pylint = "^2.12.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
