@@ -1,5 +1,5 @@
 from collections import Counter
-from dataclasses import  dataclass
+from dataclasses import dataclass
 from re import match
 
 
@@ -12,9 +12,10 @@ class PasswordPolicy1:
     def verify_policy(self, password):
         occurrences_of_char_in_password = Counter(password)[self.char]
         return (
-            occurrences_of_char_in_password >= self.min_occurrences and 
-            occurrences_of_char_in_password <= self.max_occurrences
+            occurrences_of_char_in_password >= self.min_occurrences
+            and occurrences_of_char_in_password <= self.max_occurrences
         )
+
 
 @dataclass
 class PasswordPolicy2:
@@ -23,14 +24,12 @@ class PasswordPolicy2:
     char: str
 
     def verify_policy(self, password):
-        return (
-            (password[self.index_1 - 1] == self.char) ^
-            (password[self.index_2 - 1] == self.char)
-        )
+        return (password[self.index_1 - 1] == self.char) ^ (password[self.index_2 - 1] == self.char)
 
 
 # Password line sample: 12-16 s: mzrhmvswtsgsxbpsj
 LINE_FORMAT = "([\d]+)-(\d+) ([a-z]): ([a-z]+)"
+
 
 def parse_input_line(line: str, password_policy_class):
     m = match(LINE_FORMAT, line)
@@ -43,7 +42,7 @@ def parse_input_line(line: str, password_policy_class):
 
 if __name__ == "__main__":
     lines = open("2020/02/input.txt").readlines()
-    
+
     # Part 1
     pp_pairs = [parse_input_line(l, PasswordPolicy1) for l in lines]
     validity = [policy.verify_policy(password) for policy, password in pp_pairs]

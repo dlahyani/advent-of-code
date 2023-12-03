@@ -11,9 +11,10 @@ SLOPES = [
     (1, 2),
 ]
 
+
 def count_slope_trees(road_map: List[str], slope: Tuple[int, int]) -> int:
     """
-    Slides down the road, starting at position `(0, 0)` in `road_map` and moving forward in steps 
+    Slides down the road, starting at position `(0, 0)` in `road_map` and moving forward in steps
     as defined by `slope` until reaching the bottom of the. On the way down the function counts
     the number of trees encountered and return it.
     """
@@ -28,6 +29,7 @@ def count_slope_trees(road_map: List[str], slope: Tuple[int, int]) -> int:
     except IndexError:
         return trees
 
+
 if __name__ == "__main__":
     lines = open("2020/03/input.txt", "r").readlines()
 
@@ -36,8 +38,5 @@ if __name__ == "__main__":
     print(f"Trees encountered using slope {SLOPES[1]}: {trees_encountered}")
 
     # Part 2
-    product = reduce(
-        lambda a, b: a * b, 
-        map(lambda slope: count_slope_trees(lines, slope), SLOPES)
-    )
+    product = reduce(lambda a, b: a * b, map(lambda slope: count_slope_trees(lines, slope), SLOPES))
     print(f"Product of trees encountered in each slope: {product}")

@@ -3,8 +3,8 @@ from typing import Dict, Tuple, Iterable
 
 
 adapters = sorted([int(l[:-1]) for l in open("2020/10/input.txt").readlines()])
-adapters = [0] + adapters + [adapters[-1]+3]
-diffs = [adapters[i+1] - adapters[i] for i in range(len(adapters)-1)]
+adapters = [0] + adapters + [adapters[-1] + 3]
+diffs = [adapters[i + 1] - adapters[i] for i in range(len(adapters) - 1)]
 diffs_counter = Counter(diffs)
 print("Part 1 solution: ", diffs_counter[1] * diffs_counter[3])
 
@@ -45,17 +45,18 @@ print("Part 1 solution: ", diffs_counter[1] * diffs_counter[3])
 def count_arrangements(adapters: Tuple[int], cache: Dict[Tuple[int], int] = {}):
     if adapters in cache:
         return cache[adapters]
-    
+
     if len(adapters) < 3:
         return 1
-    
+
     res = count_arrangements(adapters[1:], cache)
-    
+
     is_optional = (adapters[2] - adapters[0]) <= 3
     if is_optional:
         res += count_arrangements((adapters[0],) + adapters[2:], cache)
-        
+
     cache[adapters] = res
     return res
+
 
 print("Part 2 solution (fast): ", count_arrangements(tuple(adapters)))

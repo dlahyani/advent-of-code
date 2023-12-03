@@ -4,29 +4,30 @@ from typing import Tuple
 def apply_operator(lv, rv, operator) -> float:
     return lv + rv if operator == "+" else lv * rv
 
+
 def log(*kargs):
     pass
 
 
 def eval_expression(exp_str: str, start: int = 0) -> Tuple[float, int]:
-    log(f"==> eval_expression(\"{exp_str}\", {start})")
+    log(f'==> eval_expression("{exp_str}", {start})')
 
     exp_value = 0
-    cur_operator = '+'
+    cur_operator = "+"
     cur_term = None
     ptr = start
     while ptr < len(exp_str):
         c = exp_str[ptr]
         ptr += 1
-        if c == '(':
+        if c == "(":
             v, p = eval_expression(exp_str, ptr)
             exp_value = apply_operator(exp_value, v, cur_operator)
             ptr += p
-        elif c == ')':
+        elif c == ")":
             break
         elif c in "0123456789":
             cur_term = c
-        elif c in '+*':
+        elif c in "+*":
             if cur_term:
                 v = float(cur_term)
                 exp_value = apply_operator(exp_value, v, cur_operator)
@@ -38,12 +39,12 @@ def eval_expression(exp_str: str, start: int = 0) -> Tuple[float, int]:
         v = float(cur_term)
         exp_value = apply_operator(exp_value, v, cur_operator)
 
-    log(f"<== eval_expression(\"{exp_str}\", {start}) = {exp_value}")
+    log(f'<== eval_expression("{exp_str}", {start}) = {exp_value}')
     return exp_value, (ptr - start)
 
 
 def modify_expression(exp_str: str, start: int = 0) -> Tuple[str, int]:
-    log(f"==> modify_expression(\"{exp_str}\", {start})")
+    log(f'==> modify_expression("{exp_str}", {start})')
     exp = ""
     operands = []
 
@@ -51,11 +52,11 @@ def modify_expression(exp_str: str, start: int = 0) -> Tuple[str, int]:
     while ptr < len(exp_str):
         c = exp_str[ptr]
         ptr += 1
-        if c == '(':
+        if c == "(":
             sub_exp, p = modify_expression(exp_str, ptr)
             operands.append(f"({sub_exp})")
             ptr += p
-        elif c == ')':
+        elif c == ")":
             break
         elif c == "*":
             exp += f"{operands[0]} * "

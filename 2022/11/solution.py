@@ -12,9 +12,9 @@ class Monkey:
     divider: int
     next_monkey_true: int
     next_monkey_false: int
-    
+
     @classmethod
-    def from_descriptor(cls, descriptor: str) -> 'Monkey':
+    def from_descriptor(cls, descriptor: str) -> "Monkey":
         d_lines = [l.strip() for l in descriptor.split("\n")]
         monkey_id = int(regex.match("^Monkey (\d+):$", d_lines[0]).groups()[0])
         starting_items = [int(i) for i in regex.match("^Starting items: ((\d+),? ?)+$", d_lines[1]).captures(2)]
@@ -23,17 +23,24 @@ class Monkey:
         true_target = int(regex.match("^If true: throw to monkey (\d+)$", d_lines[4]).groups()[0])
         false_target = int(regex.match("^If false: throw to monkey (\d+)$", d_lines[5]).groups()[0])
         return Monkey(
-            id=monkey_id, items=starting_items,
-            operator=operator, right_operand=right_operand, 
-            divider=divider, next_monkey_true=true_target, next_monkey_false=false_target)    
+            id=monkey_id,
+            items=starting_items,
+            operator=operator,
+            right_operand=right_operand,
+            divider=divider,
+            next_monkey_true=true_target,
+            next_monkey_false=false_target,
+        )
 
     def inspect_item(self, item: int) -> int:
-            return item + int(self.right_operand) if self.operator == "+" else (
-                item * item if self.right_operand == "old" else item * int(self.right_operand)
-            )
+        return (
+            item + int(self.right_operand)
+            if self.operator == "+"
+            else (item * item if self.right_operand == "old" else item * int(self.right_operand))
+        )
 
     def next_monkey(self, item: int) -> int:
-            return self.next_monkey_true if item % self.divider == 0 else self.next_monkey_false
+        return self.next_monkey_true if item % self.divider == 0 else self.next_monkey_false
 
 
 def process_input(raw_input: str) -> list[Monkey]:
@@ -53,8 +60,9 @@ def play_round(monkeys: list[Monkey], relief: bool = True, common_divisor: int =
                 i %= common_divisor
             next_monkey = m.next_monkey(i)
             monkeys[next_monkey].items.append(i)
-    
+
     return inspection_counters
+
 
 raw_input = open("2022/11/input.txt").read()
 monkeys = process_input(raw_input)
@@ -63,7 +71,7 @@ monkeys = process_input(raw_input)
 counters = [play_round(monkeys) for _ in range(20)]
 total_counters = [sum(c) for c in zip(*counters)]
 top1, top2 = sorted(total_counters, reverse=True)[0:2]
-print(top1*top2)
+print(top1 * top2)
 
 
 ### Part 2
@@ -71,4 +79,4 @@ common_divisor = math.prod([m.divider for m in monkeys])
 counters = [play_round(monkeys, False, common_divisor) for _ in range(10000)]
 total_counters = [sum(c) for c in zip(*counters)]
 top1, top2 = sorted(total_counters, reverse=True)[0:2]
-print(top1*top2)
+print(top1 * top2)

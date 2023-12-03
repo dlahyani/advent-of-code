@@ -23,12 +23,10 @@ class Node:
         return sum(self.contained_colors.values()) if self.contained_colors else 0
 
     @staticmethod
-    def from_rule_str(rule_str: str) -> 'Node':
+    def from_rule_str(rule_str: str) -> "Node":
         EMPTY_BAG_PATTERN = "^(\w+ \w+) bags contain no other bags\.$"
-        NON_EMPTY_BAG_PATTERN = (
-            "^(\w+ \w+) bags contain ((\d+) (\w+ \w+) bags?, )*((\d+) (\w+ \w+) bags?\.)$"
-        )
-        
+        NON_EMPTY_BAG_PATTERN = "^(\w+ \w+) bags contain ((\d+) (\w+ \w+) bags?, )*((\d+) (\w+ \w+) bags?\.)$"
+
         # Assuming either one this would match.
         m = match(EMPTY_BAG_PATTERN, rule_str) or match(NON_EMPTY_BAG_PATTERN, rule_str)
 
@@ -36,11 +34,9 @@ class Node:
         color_name = groups[0]
         contained_colors = None
         if m.re.pattern == NON_EMPTY_BAG_PATTERN:
-            contained_colors = {
-                color: int(count) for color, count in zip(m.captures(4), m.captures(3))
-            }
+            contained_colors = {color: int(count) for color, count in zip(m.captures(4), m.captures(3))}
             contained_colors[groups[6]] = int(groups[5])
-        
+
         return Node(color_name=color_name, contained_colors=contained_colors)
 
 
@@ -49,10 +45,10 @@ class Graph:
     """
     A directed graph representing bag colors containment rules. Each node in the graph represents
     a bag-color and it has 2 sets of directed edges connecting it to other bag-colors (nodes).
-        1. Contained colors - Set of outgoing edges connecting the node to bag-colors that are 
+        1. Contained colors - Set of outgoing edges connecting the node to bag-colors that are
            contained by the bag-color the node represents. These edges are weighted, the edge weight
            represents the number of bags of the specified color contained by the node's bag color.
-        2. Contained by colors - Set of incoming edges connecting the nodes to bag-colors that 
+        2. Contained by colors - Set of incoming edges connecting the nodes to bag-colors that
            contain at least one bag of the color the node represents.
     """
 
@@ -72,7 +68,7 @@ class Graph:
         Find all bag-colors that contain, directly or indirectly, a bag of the given `color`.
         Assuming no circles in the graph the run-time complexity is O(V*E)
         """
-        node = self.nodes[color]        
+        node = self.nodes[color]
         containing_colors = set(node.contained_by_colors)
         for color in node.contained_by_colors:
             containing_colors.update(self.get_colors_containing_color(color))
@@ -92,10 +88,10 @@ class Graph:
         for color, count in node.contained_colors.items():
             total_bags_required += self.get_total_bag_count_for_color(color) * count
 
-        return total_bags_required        
+        return total_bags_required
 
     @staticmethod
-    def from_rules(rules: Iterable[str]) -> 'Graph':
+    def from_rules(rules: Iterable[str]) -> "Graph":
         """
         Builds a graph from string rules. Run-time complexity O(V*E).
         """

@@ -1,4 +1,3 @@
-
 import copy
 from functools import reduce
 
@@ -6,10 +5,12 @@ DAYS_TO_SIMULATE = 256
 
 
 SpawnMap = dict[int, int]
-    
+
+
 def spawn_map_reducer(spawn_map: SpawnMap, i: int) -> SpawnMap:
     spawn_map[i] = spawn_map[i] + 1 if i in spawn_map else 1
     return spawn_map
+
 
 def spawn_map_tick(spawn_map: SpawnMap) -> SpawnMap:
     new_map = {}
@@ -19,7 +20,7 @@ def spawn_map_tick(spawn_map: SpawnMap) -> SpawnMap:
             new_map[i] += spawn_map[0] if 0 in spawn_map else 0
         if i == 8:
             new_map[i] = spawn_map[0] if 0 in spawn_map else 0
-    
+
     return new_map
 
 
@@ -27,8 +28,9 @@ def simulate_spawn_cycles(initial_spawn_map, cycles):
     spawn_map = copy.copy(initial_spawn_map)
     for i in range(cycles):
         spawn_map = spawn_map_tick(spawn_map)
-    
+
     return spawn_map
+
 
 with open("2021/06/input.txt", "r") as f:
     lf_horde = [int(n) for n in f.read().split(",")]

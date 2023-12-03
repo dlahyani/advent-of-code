@@ -10,18 +10,16 @@ Coords = Tuple[int]
 PocketSpace = Dict[Coords, str]
 
 # A multi-dimensional array of neighboring offsets.
-NEIGHBORING_OFFSETS: Dict[int, Tuple[Coords]] = {
-    i: tuple(product([-1, 0, 1], repeat=i)) for i in range(3, 5)
-}
+NEIGHBORING_OFFSETS: Dict[int, Tuple[Coords]] = {i: tuple(product([-1, 0, 1], repeat=i)) for i in range(3, 5)}
+
 
 @cache
 def get_neighbors(point: Coords) -> set[Coords]:
     dim = len(point)
-    z = (0,)*dim
-    neighbors = {
-        tuple(sum(i) for i in zip(point, no)) for no in NEIGHBORING_OFFSETS[dim] if no != z
-    }
+    z = (0,) * dim
+    neighbors = {tuple(sum(i) for i in zip(point, no)) for no in NEIGHBORING_OFFSETS[dim] if no != z}
     return neighbors
+
 
 def init_pocket_space(lines: List[str], dimension: int) -> Dict[Tuple[int], str]:
     pocket_space = {}
@@ -54,7 +52,7 @@ def simulate_multiple_cycles(pocket_space: PocketSpace, count: int) -> PocketSpa
     for i in range(count):
         pocket_space = simulate_cycle(pocket_space)
     return pocket_space
-    
+
 
 if __name__ == "__main__":
     lines = open("2020/17/input.txt", "r").readlines()

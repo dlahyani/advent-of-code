@@ -4,8 +4,8 @@ import regex
 
 
 class RuleType(Enum):
-    SimpleRule = 0,
-    ChainedRule = 1,
+    SimpleRule = (0,)
+    ChainedRule = (1,)
     FlexRule = 2
 
 
@@ -18,7 +18,7 @@ RulesMap = Dict[int, RuleDesc]
 
 class RuleParser:
     SIMPLE_RULE_PATTERN = r'(\d+): ("[a-z]+")'
-    COMPOUND_RULE_PATTERN = r'(\d+):( \d+)+( \|( \d+)+)?'
+    COMPOUND_RULE_PATTERN = r"(\d+):( \d+)+( \|( \d+)+)?"
 
     @classmethod
     def parse_rule(cls, rule: str) -> Tuple[int, RuleDesc]:
@@ -100,7 +100,7 @@ def solution_for_input(input_filename: str):
     lines = open(input_filename, "r").readlines()
     rules_strings_separator = lines.index("\n")
     raw_rules = lines[:rules_strings_separator]
-    strings = [line[:-1] for line in lines[rules_strings_separator + 1:]]
+    strings = [line[:-1] for line in lines[rules_strings_separator + 1 :]]
 
     print(f"# of rules: {len(raw_rules)}")
     print(f"# of strings: {len(strings)}")
@@ -117,10 +117,11 @@ def main():
     # Part 1:
     print("********* Part 1:")
     solution_for_input("2020/19/input.txt")
-    
+
     # Part 2:
     print("********** Part 2:")
     solution_for_input("2020/19/input2.txt")
+
 
 if __name__ == "__main__":
     main()

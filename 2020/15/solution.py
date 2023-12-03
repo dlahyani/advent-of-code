@@ -1,4 +1,3 @@
-
 def memory_game(init_sequence, t):
     assert len(init_sequence) > 0
     assert t >= len(init_sequence)

@@ -43,7 +43,7 @@ class ChainedRule:
         return f"<ChainedRule: '{str(self)}'>"
 
     def __str__(self):
-        return '+'.join([str(sr) for sr in self.sub_rules])
+        return "+".join([str(sr) for sr in self.sub_rules])
 
 
 class FlexRule:
@@ -72,7 +72,7 @@ def _parse_simple_rule(rule: str):
     m = regex.match(SIMPLE_RULE_PATTERN, rule)
     if not m:
         return None
-    
+
     groups = m.groups()
     rule_id = int(groups[0])
     rule_str = groups[1][1:-1]
@@ -80,7 +80,7 @@ def _parse_simple_rule(rule: str):
 
 
 def _parse_compound_rule(rule: str):
-    COMPOUND_RULE_PATTERN = '(\d+):( \d+)+( \|( \d+)+)?'
+    COMPOUND_RULE_PATTERN = "(\d+):( \d+)+( \|( \d+)+)?"
 
     m = regex.match(COMPOUND_RULE_PATTERN, rule)
     if not m:
@@ -95,13 +95,14 @@ def _parse_compound_rule(rule: str):
         rule_type = FlexRule
         sub_rules = (sub_rules, (int(sr) for sr in m.captures(4)))
 
-    assert (('|' in rule and rule_type == FlexRule) or rule_type == ChainedRule)
+    assert ("|" in rule and rule_type == FlexRule) or rule_type == ChainedRule
 
     return rule_id, rule_type, sub_rules
 
 
 def parse_rule(rule: str) -> Rule:
     return _parse_simple_rule(rule) or _parse_compound_rule(rule)
+
 
 ParsedRulesMap = Dict[int, Tuple[Callable, Any]]
 
@@ -129,10 +130,7 @@ def _build_rule(rules, built_rules, rule_id):
     elif rule_type == ChainedRule:
         sub_rules = []
         for srid in params:
-            sub_rules.append(
-                built_rules[srid] if srid in built_rules else
-                _build_rule(rules, built_rules, srid)
-            )
+            sub_rules.append(built_rules[srid] if srid in built_rules else _build_rule(rules, built_rules, srid))
         built_rules[rule_id] = rule_type(tuple(sub_rules))
     else:
         flex_rule_sub_rules = []
@@ -140,8 +138,7 @@ def _build_rule(rules, built_rules, rule_id):
             chained_rule_sub_rules = []
             for srid in chained_group:
                 chained_rule_sub_rules.append(
-                    built_rules[srid] if srid in built_rules else
-                    _build_rule(rules, built_rules, srid)
+                    built_rules[srid] if srid in built_rules else _build_rule(rules, built_rules, srid)
                 )
             chained_sub_rule = ChainedRule(tuple(chained_rule_sub_rules))
             flex_rule_sub_rules.append(chained_sub_rule)
@@ -155,7 +152,7 @@ def main():
     lines = open("2020/19/input.txt", "r").readlines()
     rules_strings_separator = lines.index("\n")
     raw_rules = lines[:rules_strings_separator]
-    strings = [l[:-1] for l in lines[rules_strings_separator + 1:]]
+    strings = [l[:-1] for l in lines[rules_strings_separator + 1 :]]
 
     print(f"# of rules: {len(raw_rules)}")
     print(f"# of strings: {len(strings)}")

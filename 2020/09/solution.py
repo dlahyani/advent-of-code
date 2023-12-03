@@ -2,6 +2,7 @@ from typing import List, Optional, Set, Tuple
 
 PREAMBLE_LEN = 25
 
+
 def sum_of_k(numbers: Set[int], d: int, k: int) -> Optional[Tuple[int]]:
     """
     Find and return a tuple of `k` elements from `numbers` that their sum equals to `d`. If no such
@@ -14,11 +15,12 @@ def sum_of_k(numbers: Set[int], d: int, k: int) -> Optional[Tuple[int]]:
     """
     if k == 1:
         return (d,) if d in numbers else None
-    
+
     for n in numbers:
-        n_comp  = sum_of_k(numbers, d - n, k - 1) 
+        n_comp = sum_of_k(numbers, d - n, k - 1)
         if n_comp:
             return n_comp + (n,)
+
 
 def find_xmas_break(numbers: List[int], preamble_size: int) -> int:
     """
@@ -32,9 +34,9 @@ def find_xmas_break(numbers: List[int], preamble_size: int) -> int:
     """
     preamble = set(numbers[:preamble_size])
     for i in range(preamble_size, len(numbers)):
-        if not sum_of_k(preamble, numbers[i], 2): 
+        if not sum_of_k(preamble, numbers[i], 2):
             return i
-        
+
         preamble.remove(numbers[i - preamble_size])
         preamble.add(numbers[i])
 
@@ -52,7 +54,7 @@ def find_seq_with_sum(numbers: List[int], target_sum: int) -> Optional[Tuple[int
     # Run with 2 pointers on the list which respectively mark the beginning and end of the sequence
     # to check. If the sum of that sequence matches `target_sum` we return the 2 pointers, if the
     # sum is too small we move froward the end marker (adding one more element to the sequence), and
-    # if the sum is too high we move forward the start marker (removing one element from the 
+    # if the sum is too high we move forward the start marker (removing one element from the
     # sequence). This way we scan the entire list until we find a matching sequence or both markers
     # reach the end of the list.
     seq_start = 0
@@ -83,7 +85,7 @@ if __name__ == "__main__":
     print(f"XMAS is broken at index {xmas_break_index}, {xmas_break_value}")
 
     # Part 2
-    seq_range  = find_seq_with_sum(numbers, xmas_break_value)
-    seq = numbers[seq_range[0]: seq_range[1] + 1]
+    seq_range = find_seq_with_sum(numbers, xmas_break_value)
+    seq = numbers[seq_range[0] : seq_range[1] + 1]
     xmas_weakness = min(seq) + max(seq)
     print(f"XMAS encryption weakness value is: {xmas_weakness}")
