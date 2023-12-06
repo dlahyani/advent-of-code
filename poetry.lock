@@ -375,6 +375,18 @@ files = [
 ]
 
 [[package]]
+name = "types-regex"
+version = "2023.10.3.0"
+description = "Typing stubs for regex"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "types-regex-2023.10.3.0.tar.gz", hash = "sha256:2521c164b71fd0aa901df93993292e266b7fc6d59d4906a8f716033ace885235"},
+    {file = "types_regex-2023.10.3.0-py3-none-any.whl", hash = "sha256:d4a5b8968c3a53f120e4e599b4b062d8567e3525a646562692120cde23cb37af"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.8.0"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -469,4 +481,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "5f46b4c39ebd62bab1c88fb5df55122eb03eb2c9cc6c9bd9c57d0434001d387b"
+content-hash = "5389358de236756969c771b690118307a263ea51b9335c212321703e98533a6e"
