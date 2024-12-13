@@ -1,7 +1,4 @@
-from gc import disable
 import re
-
-from tenacity import DoSleep
 
 # Common
 with open("2024/03/input.txt", "r") as f:
