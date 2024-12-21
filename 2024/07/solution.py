@@ -1,8 +1,6 @@
 
 from functools import lru_cache
-from operator import eq
-from typing import Literal
-
+from itertools import product
 
 def parse_equation(equation: str) -> tuple[int, tuple[int, ...]]:
     res_str, factors_str = equation.split(": ")
@@ -14,21 +12,11 @@ def load_equations(input_file: str) -> list[tuple[int, tuple[int, ...]]]:
     with open(input_file, "r") as f:
         return [parse_equation(l.strip()) for l in f.readlines()]
     
-Operator = Literal['+', '*']
-    
 @lru_cache(maxsize=None)
-def gen_operators(n: int) -> list[tuple[Operator, ...]]:
-    num_strings = 2**n  # Total number of strings
-    results: list[tuple[Operator, ...]] = []
-    
-    for i in range(num_strings):
-        binary_representation = bin(i)[2:].zfill(n)  # Get binary string padded to length n
-        custom_representation = binary_representation.replace('0', '+').replace('1', '*')
-        results.append(tuple(custom_representation))  # type: ignore
-    
-    return results
+def gen_operators(n: int, allowed_ops: tuple[str]) -> list[tuple[str, ...]]:
+    return [tuple(comb) for comb in product(allowed_ops, repeat=n)]
 
-def evaluate_equation(equation: tuple[int, tuple[int, ...]], operators: tuple[Operator, ...]) -> int:
+def evaluate_equation(equation: tuple[int, tuple[int, ...]], operators: tuple[str, ...]) -> int:
     _, factors = equation
     result = factors[0]
     for i, operator in enumerate(operators):
@@ -36,14 +24,16 @@ def evaluate_equation(equation: tuple[int, tuple[int, ...]], operators: tuple[Op
             result += factors[i+1]
         elif operator == '*':
             result *= factors[i+1]
+        elif operator == '||':
+            result = int(str(result) + str(factors[i+1]))
         else:
             raise ValueError(f"Unknown operator {operator}")
     
     return result
     
-def equation_has_solution(equation: tuple[int, tuple[int, ...]]) -> bool:
+def equation_has_solution(equation: tuple[int, tuple[int, ...]], allowed_ops: tuple[str, ...]) -> bool:
     res, factors = equation
-    possible_operators = gen_operators(len(factors) - 1)
+    possible_operators = gen_operators(len(factors) - 1, allowed_ops)
     for operators in possible_operators:
         if evaluate_equation(equation, operators) == res:
             return True
@@ -52,9 +42,18 @@ def equation_has_solution(equation: tuple[int, tuple[int, ...]]) -> bool:
     
 
 equations = load_equations("2024/07/input.txt")
-valid_equations = [eq for eq in equations if equation_has_solution(eq)]
+
+# Part 1
+OPERATORS = ('+', '*')
+valid_equations = [eq for eq in equations if equation_has_solution(eq, OPERATORS)]
 s = sum([eq[0] for eq in valid_equations])
 print(s)
 
+
+# Part 2
+OPERATORS = ('+', '*', '||')
+valid_equations = [eq for eq in equations if equation_has_solution(eq, OPERATORS)]
+s = sum([eq[0] for eq in valid_equations])
+print(s)
 
    
